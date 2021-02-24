@@ -1,0 +1,12 @@
+apiVersion: v1
+data:
+  COMPOSE_PROJECT_NAME: otobo
+  OTOBO_DB_ROOT_PASSWORD: mysecretww
+  OTOBO_ELASTICSEARCH_ES_JAVA_OPTS: -Xms512m -Xmx512m
+  MYSQL_ROOT_PASSWORD: mysecretww
+kind: ConfigMap
+metadata:
+  creationTimestamp: null
+  labels:
+    io.kompose.service: daemon-env
+  name: env

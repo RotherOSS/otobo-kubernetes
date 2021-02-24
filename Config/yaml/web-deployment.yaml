@@ -1,0 +1,53 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: ./kompose convert -f otobo-base.yml
+    kompose.version: 1.22.0 (955b78124)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: web
+  name: web
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: web
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: ./kompose convert -f otobo-base.yml
+        kompose.version: 1.22.0 (955b78124)
+      creationTimestamp: null
+      labels:
+        io.kompose.service: web
+    spec:
+      securityContext:
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+      containers:
+        - command: ["/opt/otobo_install/entrypoint.sh"]
+          args: ["web"]
+          env:
+            - name: OTOBO_DB_ROOT_PASSWORD
+              valueFrom:
+                configMapKeyRef:
+                  key: OTOBO_DB_ROOT_PASSWORD
+                  name: env
+          image: rotheross/otobo:rel-10_0_8
+          name: web
+          ports:
+            - containerPort: 5000
+          resources: {}
+          volumeMounts:
+            - mountPath: /opt/otobo
+              name: opt-otobo
+      restartPolicy: Always
+      volumes:
+        - name: opt-otobo
+          persistentVolumeClaim:
+            claimName: opt-otobo
+status: {}
