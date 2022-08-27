@@ -38,6 +38,8 @@ spec:
                   name: env
           image: mariadb:10.5.5
           name: db
+          ports:
+          - containerPort: 3306
           resources: {}
           volumeMounts:
             - mountPath: /var/lib/mysql
