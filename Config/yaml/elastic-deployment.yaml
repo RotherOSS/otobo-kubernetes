@@ -41,6 +41,7 @@ spec:
           volumeMounts:
             - mountPath: /usr/share/elasticsearch/data
               name: elasticsearch-data
+              subPath: data
       restartPolicy: Always
       volumes:
         - name: elasticsearch-data
