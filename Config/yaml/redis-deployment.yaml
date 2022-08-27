@@ -1,13 +1,8 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  annotations:
-    kompose.cmd: ./kompose convert -f otobo-base.yml
-    kompose.version: 1.22.0 (955b78124)
-  creationTimestamp: null
-  labels:
-    io.kompose.service: redis
   name: redis
+  namespace: otobo
 spec:
   replicas: 1
   selector:
@@ -24,23 +19,33 @@ spec:
       labels:
         io.kompose.service: redis
     spec:
-      securityContext:
-        runAsUser: 999
-        runAsGroup: 1000
+      nodeSelector:
+        app: mid
       containers:
-        - image: redis:6.0.8-alpine
-          name: redis
-          resources: {}
-          securityContext:
-            capabilities:
-              drop:
-                - ALL
-          volumeMounts:
-            - mountPath: /data
-              name: redis-data
-      restartPolicy: Always
+      - name: redis
+        image: redis:6.0.8-alpine
+        command:
+        - redis-server
+        - "/redis-master/redis.conf"
+        env:
+        - name: MASTER
+          value: "true"
+        ports:
+        - containerPort: 6379
+        resources:
+          limits:
+            cpu: "0.1"
+        volumeMounts:
+        - mountPath: /redis-master-data
+          name: data
+        - mountPath: /redis-master
+          name: config
       volumes:
-        - name: redis-data
-          persistentVolumeClaim:
-            claimName: redis-data
-status: {}
+        - name: data
+          emptyDir: {}
+        - name: config
+          configMap:
+            name: redis-config
+            items:
+            - key: redis-data
+              path: redis.conf
