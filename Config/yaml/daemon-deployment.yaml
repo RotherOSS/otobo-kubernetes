@@ -41,6 +41,7 @@ spec:
           volumeMounts:
             - mountPath: /opt/otobo
               name: opt-otobo
+              subPath: otobo
       restartPolicy: Always
       volumes:
         - name: opt-otobo
