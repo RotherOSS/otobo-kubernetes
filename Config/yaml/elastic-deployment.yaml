@@ -37,6 +37,8 @@ spec:
               value: single-node
           image: rotheross/otobo-elasticsearch:latest
           name: elastic
+          ports:
+          - containerPort: 9200
           resources: {}
           volumeMounts:
             - mountPath: /usr/share/elasticsearch/data
