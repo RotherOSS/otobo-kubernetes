@@ -2,6 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: redis
+  namespace: otobo
 spec:
   replicas: 1
   selector:
@@ -18,6 +19,8 @@ spec:
       labels:
         io.kompose.service: redis
     spec:
+      nodeSelector:
+        app: mid
       containers:
       - name: redis
         image: redis:6.0.8-alpine
